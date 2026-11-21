@@ -77,6 +77,18 @@ class Workspace:
         cut = f"\n(cut: {len(out) - OUTPUT_LIMIT} more characters)" if len(out) > OUTPUT_LIMIT else ""
         return {"exit_code": p.returncode, "output": out[-OUTPUT_LIMIT:] + cut}
 
+    def list_tests(self) -> dict:
+        found = []
+        for f in sorted(glob.glob("tests/**/*.py", root_dir=self.root, recursive=True)):
+            full = os.path.join(self.root, f)
+            if not os.path.isfile(full) or "__pycache__" in f:
+                continue
+            for line in open(full, errors="replace"):
+                m = re.match(r"\s*def\s+(test_\w+)\s*\(", line)
+                if m:
+                    found.append(f"{f}::{m.group(1)}")
+        return {"tests": found}
+
     def tools(self):
         return [
             (declare(self.read_file, "Read a file, or lines start to end, with line numbers."), self.read_file),
@@ -87,4 +99,5 @@ class Workspace:
             (declare(self.write_file, "Create a file, or replace one you have read, with content."), self.write_file),
             (declare(self.run, "Run a shell command in the repository, with a time limit in seconds. "
                                "Returns the exit code and the output."), self.run),
+            (declare(self.list_tests, "List the test names in tests/."), self.list_tests),
         ]

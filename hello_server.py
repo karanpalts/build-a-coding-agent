@@ -1,4 +1,4 @@
-"""The smallest tool server: one tool, served over HTTP on this machine, with the MCP SDK.
+"""The smallest tool server: two tools, served over HTTP on this machine, with the MCP SDK.
 
   uv run hello_server.py          in one terminal: it prints a line for every call it answers
   uv run try_a_server_mcp.py --url http://127.0.0.1:8000/mcp --tool say_hello --args '{"name": "Ana"}'
@@ -20,6 +20,16 @@ def say_hello(name: str) -> str:
     print(f"[hello server, process {os.getpid()}] tools/call say_hello(name={name!r}): call {calls} at {now}",
           flush=True)
     return f"Hello, {name}! From the hello server, process {os.getpid()}, call {calls}, at {now}."
+
+
+@server.tool(description="Add two integers and return their sum.")
+def add(a: int, b: int) -> int:
+    global calls
+    calls += 1
+    now = datetime.datetime.now().strftime("%H:%M:%S")
+    print(f"[hello server, process {os.getpid()}] tools/call add(a={a}, b={b}): call {calls} at {now}",
+          flush=True)
+    return a + b
 
 
 if __name__ == "__main__":

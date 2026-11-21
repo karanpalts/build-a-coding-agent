@@ -7,9 +7,10 @@ deny = [
 ]
 
 allow = [
-  "read_file(*)", "search(*)", "load_skill(*)", "explore(*)",
+  "read_file(*)", "search(*)", "load_skill(*)", "explore(*)", "list_tests(*)",
   "edit_file(src/*)", "edit_file(tests/*)", "write_file(src/*)", "write_file(tests/*)",
   "run(python -m pytest*)", "run(pytest*)",
   "run(ls*)", "run(find *)", "run(grep *)", "run(cat *)",
   "run(git status*)", "run(git diff*)", "run(git log*)", "run(git add *)", "run(git commit *)",
+  "run(git checkout -b agent/*)", "run(git push origin agent/*)",
 ]

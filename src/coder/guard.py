@@ -48,6 +48,8 @@ def before_call(workspace, name, args):
     """A hook: refuse edits to generated files, whatever the permissions say."""
     if name in ("edit_file", "write_file") and args.get("path", "").startswith("src/generated/"):
         return "src/generated/ is generated from the payments schema; change the schema instead"
+    if name == "write_file" and args.get("path", "").startswith("tests/") and os.path.exists(workspace.path(args["path"])):
+        return f"{args['path']} already exists in tests/; use edit_file instead of replacing the whole file"
 
 
 def after_call(workspace, name, args, result):
